@@ -207,7 +207,7 @@ export default function WriteStoryPage({ navigation, route }: StoryProps) {
           subtitle={['작성한 스토리는', '마이페이지 > 스토리 > 내가 쓴 스토리', '에서 확인할 수 있어요']}
         />
       </Modal>
-      <FormHeader title='스토리 작성' onLeft={() => navigation.goBack()} onRight={post ? updateStory : saveStory} begin={true} end={true} />
+      <FormHeader title='스토리 작성' onLeft={() => {post ? navigation.replace('StoryDetail', {id: post.id}) : navigation.goBack()}} onRight={post ? updateStory : saveStory} begin={true} end={true} />
       <ScrollView showsVerticalScrollIndicator={false}>
       <TouchableWithoutFeedback onPress={() => {
         Keyboard.dismiss();

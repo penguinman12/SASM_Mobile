@@ -6,7 +6,7 @@ import DropDown from "../../../common/DropDown";
 import NothingIcon from "../../../assets/img/nothing.svg";
 
 interface SearchResultProps {
-  type: "curation" | "story" | "forest";
+  type: string;
   search?: string;
   count: number;
   data: any[];

@@ -65,6 +65,7 @@ const MenuWrapper = styled.View`
   height: 60%;
   display: flex;
   flex-flow: column;
+  justify-content: center;
 `;
 interface PlaceFormProps {
   setPlaceformModal: Dispatch<SetStateAction<boolean>>;
@@ -231,7 +232,6 @@ export default function PlaceForm({
                 <Text style={TextStyles.title}>SASM에 없는</Text>
                 <Text style={TextStyles.title}>장소를 제보해주세요</Text>
               </View>
-              <Text style={TextStyles.content}>건당 ---P 지급해드려요</Text>
               <Link
                 onPress={() => {
                   setOwner(false);

@@ -18,6 +18,7 @@ export default function SearchStoryCard({ data }: any) {
         style={{
           flexDirection: "row",
           width: width - 30,
+          marginHorizontal: 10,
           height: 130,
           justifyContent: "space-between",
           borderBottomColor: "rgba(203, 203, 203, 1)",

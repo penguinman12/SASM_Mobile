@@ -9,6 +9,9 @@ import { getNickname } from "../../../common/storage";
 import { Request } from '../../../common/requests';
 import WriteReview from './WriteReview';
 import FastImage from 'react-native-fast-image';
+import { StackNavigationProp, StackScreenProps } from "@react-navigation/stack";
+import { useNavigation } from "@react-navigation/native";
+import { TabProps } from "../../../../App";
 
 const Section = styled.SafeAreaView`
   height: 100%;
@@ -69,6 +72,8 @@ export default function ReviewDetail({ reviewData, setDetailModal, rerender, cat
     rerender();
   }
 
+  const navigationToTab = useNavigation<StackNavigationProp<TabProps>>();
+
   return (
     <Section>
       <Modal visible={reviewModal}>
@@ -113,7 +118,10 @@ export default function ReviewDetail({ reviewData, setDetailModal, rerender, cat
         }
       </View>
       <TextBox>
-        <Text style={TextStyles.nickname}>{reviewData.nickname}</Text>
+        <TouchableOpacity onPress={() => { navigationToTab.navigate('마이페이지', { email: reviewData.writer }) }}>
+          <Text style={TextStyles.nickname}>{reviewData.nickname}</Text>
+        </TouchableOpacity>
+        
         <Text style={TextStyles.date}>{reviewData.created.slice(0, 10).replace(/-/gi, '.')}</Text>
         <Text style={TextStyles.content}>{reviewData.contents}</Text>
         {

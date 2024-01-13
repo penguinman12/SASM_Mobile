@@ -77,6 +77,7 @@ export default function SocialLogin({ type }: { type: string }) {
     }).then((response) => {
       processLoginResponse(response, navigation, setLogin);
     }).catch((error) => {
+      console.error(error)
       Alert.alert('카카오 로그인이 실패하였습니다.')
     });
   };
@@ -100,6 +101,7 @@ export default function SocialLogin({ type }: { type: string }) {
     }).then((response) => {
       processLoginResponse(response, navigation, setLogin);
     }).catch((error) => {
+      console.error(error)
       Alert.alert('네이버 로그인이 실패하였습니다.');
     });
   };
@@ -116,6 +118,7 @@ export default function SocialLogin({ type }: { type: string }) {
         processLoginResponse(response, navigation, setLogin);
       });
     }).catch((error) => {
+      console.error(error)
       Alert.alert('구글 로그인이 실패하였습니다.')
     });
   }
@@ -136,6 +139,7 @@ export default function SocialLogin({ type }: { type: string }) {
     }).then((response) => {
       processLoginResponse(response, navigation, setLogin);
     }).catch((error) => {
+      console.error(error)
       Alert.alert('애플 로그인이 실패하였습니다.')
     });
   }

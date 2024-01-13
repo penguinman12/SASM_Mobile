@@ -18,7 +18,7 @@ import styled from "styled-components/native";
 import ListHeader from "./components/ListHeader";
 import PostItem, { HotPostItem } from "./components/PostItem";
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
-
+import { SelectedCategoryContext } from "./SelectedCategoryContext";
 import { ForestStackParams } from "../../pages/Forest";
 import { Request } from "../../common/requests";
 import CardView from "../../common/CardView";
@@ -38,17 +38,15 @@ const BoardDetailScreen = ({
   const [refreshing, setRefreshing] = useState(false);
   const [nickname, setNickname] = useState('');
   const [semiCategories, setSemiCategories] = useState([] as any);
-  const [checkedList, setCheckedList] = useState([] as any);
-  const [selectedIds, setSelectedIds] = useState<number[]>([]);
   const [posts, setPosts] = useState([] as any);
   const [hotPosts, setHotPosts] = useState([] as any);
   const [newPosts, setNewPosts] = useState([] as any);
   const {isLogin, setLogin} = useContext(LoginContext);
+  const {selectedIds, setSelectedIds, selectedCategories, setSelectedCategories} =useContext(SelectedCategoryContext);
+
   const request = new Request();
   const navigationToTab = useNavigation<StackNavigationProp<TabProps>>();
   const board_category = route.params.board_category;
-  const user_select=route.params.user_select;
-  const user_select_id=route.params.user_select_id;
 
   const getUserInfo = async () => {
     const response = await request.get('/mypage/me/', {}, {});
@@ -58,14 +56,14 @@ const BoardDetailScreen = ({
   const getSemiCategories = async () => {
     const response = await request.get(`/forest/semi_categories/`, {category: board_category.id}, {});
     setSemiCategories(response.data.data.results);
-    setCheckedList(user_select);
-    if (user_select_id){setSelectedIds(user_select_id);}
   }
 
   const getPosts = async () => {
     let params = new URLSearchParams();
-    for (const category of checkedList){
-      params.append('semi_category_filters', category.id);
+    for (const category of selectedCategories){
+      if(semiCategories.includes(category.id)){
+        params.append('semi_category_filters', String(category.id));
+      }
     }
     const response = await request.get(`/forest/?${params.toString()}`, {
       category_filter: board_category.id,
@@ -112,12 +110,13 @@ const BoardDetailScreen = ({
 
   useFocusEffect(useCallback(() => {
     getPosts();
-  }, [refreshing, checkedList]))
+    console.error("selectedCategories",selectedCategories)
+  }, [refreshing, selectedCategories]))
 
 
   return (
     <SafeAreaView style={styles.container}>
-    <ListHeader key={JSON.stringify({ selectedIds, checkedList })} board_name={board_category.name} navigation={navigation} selectedIds={selectedIds} checkedList={checkedList}/>
+    <ListHeader key={JSON.stringify({ selectedIds, selectedCategories })} board_name={board_category.name} navigation={navigation} selectedIds={selectedIds} checkedList={selectedCategories}/>
     <ScrollView>
       {loading ? (
         <ActivityIndicator />
@@ -130,12 +129,13 @@ const BoardDetailScreen = ({
                 onPress={() => {
                   if (selectedIds.includes(item.id)) {
                     setSelectedIds(selectedIds.filter(id => id !== item.id));
-                    setCheckedList(checkedList.filter((category: any) => category.id !== item.id));
+                    setSelectedCategories(selectedCategories.filter((category: any) => category.id !== item.id));
                   } else {
                     setSelectedIds([...selectedIds, item.id]);
-                    setCheckedList([...checkedList, item]);
+                    setSelectedCategories([...selectedCategories, item]);
                   }
                 }}
+                
               >
                 <Text style={{color: selectedIds.includes(item.id) ? 'white' : '#202020', fontSize: 14, fontWeight: selectedIds.includes(item.id) ? '600' : '400'}}># {item.name}</Text>
               </TouchableOpacity>

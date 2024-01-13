@@ -57,7 +57,7 @@ const Withdraw = ({ navigation }: StackScreenProps<MyPageProps, 'withdraw'>) => 
         );
     }
     const withdraw = async () => {
-        const response = await request.put(`/mypage/withdraw/`, {});
+        const response = await request.delete(`/mypage/withdraw/`, {});
         if (response.status == 200) {
             Alert.alert('알림', '회원 탈퇴가 성공적으로 수행되었습니다.', [{ text: '확인' }]);
             removeAccessToken();
@@ -67,6 +67,7 @@ const Withdraw = ({ navigation }: StackScreenProps<MyPageProps, 'withdraw'>) => 
             navigation.navigate('mypage');
         }
         else {
+            console.error(response)
             Alert.alert('알림', '회원 탈퇴가 실패하였습니다.', [{ text: '확인' }]);
         }
         navigation.navigate('mypage');

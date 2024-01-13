@@ -5,23 +5,43 @@ import {
   Dimensions,
   Platform,
   SafeAreaView,
-  FlatList,
+  TextInput,
 } from "react-native";
 import { TextPretendard as Text } from "../../common/CustomText";
 import { Request } from "../../common/requests";
-import { useFocusEffect } from "@react-navigation/native";
 import { StackScreenProps, StackNavigationProp } from "@react-navigation/stack";
 import { HomeStackParams } from "../../pages/Home";
-import SearchBar from "../../common/SearchBar";
-import SearchList from "../story/components/SearchList";
-import ToCardView from "../../assets/img/Story/ToCardView.svg";
-import ToListView from "../../assets/img/Story/ToListView.svg";
-import DropDown from "../../common/DropDown";
 import Arrow from "../../assets/img/common/Arrow.svg";
-import NothingIcon from "../../assets/img/nothing.svg";
 import Close from "../../assets/img/common/Close.svg";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import SearchResultTabView from "./Search/SearchResultTabView";
+import styled from "styled-components/native";
+import Search from "../../assets/img/common/Search.svg";
+import { FlatList } from "react-native-gesture-handler";
+
+const SearchWrapper = styled.View`
+  display: flex;
+  width: 80%;
+  margin: 0 auto;
+  height: 36px;
+  flex-direction: row;
+  border-radius: 12px;
+`;
+const StyledInput = styled.TextInput`
+  width: 100%;
+  padding: 0 5%;
+  font-family: Pretendard Variable;
+`;
+const ResetButton = styled.TouchableOpacity`
+  position: absolute;
+  height: 100%;
+  right: 0px;
+  top: 0px;
+  width: 15%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
 
 export default function HomeSearch({
   navigation,
@@ -37,19 +57,29 @@ export default function HomeSearch({
   const [count, setCount] = useState<any>({ curation: 0, story: 0, forest: 0 });
   const { width, height } = Dimensions.get("screen");
   const request = new Request();
+  const inputRef = useRef<TextInput>(null);
 
   useEffect(() => {
-    handleSearchToggle();
     if (search.length > 0) {
       getResult();
     }
   }, [search]);
-  
+
+  const focusInput = () => {
+    if (inputRef != null) {
+      inputRef.current?.focus();
+    }
+  };
+
   const getResult = async () => {
-    const response = await request.get('/curations/total_search/', {
-      search: search,
-      order: "latest",
-    }, null);
+    const response = await request.get(
+      "/curations/total_search/",
+      {
+        search: search,
+        order: "latest",
+      },
+      null
+    );
     setItem(response.data.data);
     setCount({
       curation: response.data.curation_count,
@@ -58,16 +88,10 @@ export default function HomeSearch({
     });
   };
 
-  const handleSearchToggle = async () => {
-    if (search.length === 0) {
-      setItem([]);
-      setIsSearch(false);
-    }
-  };
-
   const onRefresh = async () => {
     if (!refreshing) {
       setRefreshing(true);
+      getResult();
       setRefreshing(false);
     }
   };
@@ -110,7 +134,6 @@ export default function HomeSearch({
 
   const handleSearchSubmit = () => {
     if (search.trim() === "") return;
-    setIsSearch(true);
     const updatedSearches = [search, ...recentSearches];
     setRecentSearches(updatedSearches);
     saveRecentSearches(updatedSearches);
@@ -154,24 +177,31 @@ export default function HomeSearch({
             color={"black"}
           />
         </TouchableOpacity>
-        <SearchBar
-          search={search}
-          setSearch={setSearch}
-          style={{ backgroundColor: "#F4F4F4", width: "85%" }}
-          placeholder={"궁금한 정보를 검색해 보세요."}
-          placeholderTextColor={"#848484"}
-          onSubmitEditing={handleSearchSubmit}
-          returnKeyType="search"
-        />
+        <SearchWrapper style={{ backgroundColor: "#F4F4F4", width: "85%" }}>
+          <StyledInput
+            value={search}
+            spellCheck={false}
+            onChangeText={setSearch}
+            placeholder={"궁금한 정보를 검색해 보세요."}
+            placeholderTextColor={"#848484"}
+            onSubmitEditing={handleSearchSubmit}
+            returnKeyType="search"
+            ref={inputRef}
+          />
+          <ResetButton onPress={() => setSearch("")}>
+            <Search />
+          </ResetButton>
+        </SearchWrapper>
       </View>
-      {isSearch ? (
-        <SearchResultTabView
-          data={item}
-          // search={search}
-          count={count}
-          refreshing={refreshing}
-          onRefresh={onRefresh}
-        />
+      {search.length > 0 ? (
+        <>
+          <SearchResultTabView
+            data={item}
+            count={count}
+            refreshing={refreshing}
+            onRefresh={onRefresh}
+          />
+        </>
       ) : (
         <>
           <View
@@ -180,7 +210,8 @@ export default function HomeSearch({
               borderColor: "#E3E3E3",
               borderTopWidth: 1,
               marginTop: 10,
-              padding: 15,
+              paddingHorizontal: 15,
+              paddingTop: 15,
             }}
           >
             <Text
@@ -217,7 +248,7 @@ export default function HomeSearch({
               ))}
             </View>
           </View>
-          <View style={{ flex: 4, padding: 20 }}>
+          <View style={{ flex: 4, paddingHorizontal: 20, marginTop: 20 }}>
             <View style={{ flexDirection: "row" }}>
               <Text
                 style={{

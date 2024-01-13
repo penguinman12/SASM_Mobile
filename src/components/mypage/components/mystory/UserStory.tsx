@@ -45,6 +45,7 @@ const UserStory = ({email}: OtherUserInfo) => {
   const request = new Request();
   const [type, setType] = useState<boolean>(false);
   const [written, setWritten] = useState<MyStroyItemCardProps[]>([]);
+  const [isUser, setIsUser] = useState<boolean>(false);
 
   const rerender = () => {
     setRefresh(true);
@@ -91,6 +92,7 @@ const UserStory = ({email}: OtherUserInfo) => {
               checkedList={checkedList}
               setCheckedList={setCheckedList}
               label='내 스토리'
+              isUser={isUser}
             />
             <View style={styles().Story}>
               {written.length === 0 ? (

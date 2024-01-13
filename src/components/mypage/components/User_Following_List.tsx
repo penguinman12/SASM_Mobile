@@ -2,7 +2,7 @@ import React, { useState, useCallback } from 'react';
 import { ScrollView } from 'react-native-gesture-handler';
 import { Image, TouchableOpacity, View, StyleSheet, SafeAreaView, Platform } from "react-native";
 import { TextPretendard as Text } from '../../../common/CustomText';
-import { Request } from '../../../common/requests'
+import { Request } from '../../../common/requests';
 import { useFocusEffect } from '@react-navigation/native';
 import { StackScreenProps } from '@react-navigation/stack';
 import { MyPageProps } from '../../../pages/MyPage';
@@ -12,62 +12,74 @@ import { StackNavigationProp } from "@react-navigation/stack";
 import { useNavigation } from "@react-navigation/native";
 import { TabProps } from "../../../../App";
 
-const Follower = ({ navigation, route }: StackScreenProps<MyPageProps, 'follower'>) => {
-  const request = new Request();
-  const [followerList, setFollowerList] = useState<{ email: string, profile_image: string, nickname: string }[]>([]);
-  const [searchQuery, setSearchQuery] = useState<string>('');
 
-  const GetFollower = async () => {
-    const response = await request.get('/mypage/follower/', {
+const UserFollowing = ({ navigation, route }: StackScreenProps<MyPageProps, 'user_following'>) => {
+  const request = new Request();
+  const [followingList, setFollowingList] = useState<{ email: string, profile_image: string, nickname: string }[]>([]);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [refresh, setRefresh] = useState<boolean>(false);
+
+  const rerender = () => {
+    setRefresh(!refresh);
+  }
+
+  const GetFollowing = async () => {
+    const response = await request.get('/mypage/following/', {
       email: route.params.email,
       search_email: searchQuery
     });
-    setFollowerList(response.data.data.results)
+    setFollowingList(response.data.data.results)
   }
 
+  const undoFollowing = async (email: string) => {
+    const response = await request.post('/mypage/follow/', { targetEmail: email });
+    rerender();
+  }
 
   useFocusEffect(
     useCallback(() => {
-      GetFollower();
-    }, [searchQuery]))
+      GetFollowing();
+    }, [searchQuery, refresh]))
 
   const navigationToTab = useNavigation<StackNavigationProp<TabProps>>();
-
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: 'white', paddingTop: 10 }}>
       <TouchableOpacity style={{ left: 10, marginBottom: 18, display: 'flex', flexDirection: 'row', alignItems: 'center', marginTop: Platform.OS == 'ios' ? 5 : 0 }} onPress={() => { navigation.goBack() }}>
         <Arrow width={20} height={20} transform={[{ rotateY: '180deg' }]} style={{ marginRight: 16 }} color={'black'}/>
-        <Text style={{ fontSize: 16, lineHeight: 24, letteringSpace: -0.6 }} >팔로워</Text>
+        <Text style={{ fontSize: 16, lineHeight: 24, letteringSpace: -0.6 }} >팔로잉</Text>
       </TouchableOpacity>
       <SearchBar
         search={searchQuery}
         setSearch={setSearchQuery}
-        style={{ width: '90%', backgroundColor: "#F4F4F4" }}
+        style={{ width: '90%', backgroundColor: "#F4F4F4", }}
         placeholder='궁금한 프로필을 검색해보세요'
         keyboardType='email-address'
       />
       <ScrollView contentContainerStyle={styles.container}>
         {
-          followerList.length == 0 ? 
+          followingList.length == 0 ?
             <View>
-              <Text style={styles.alert}>당신을 팔로잉 중인 유저가 없습니다</Text>
+              <Text style={styles.alert}>팔로잉 중인 유저가 없습니다</Text>
             </View> :
             <>
-            {
-              followerList.map((user) => (
-                <View key={user.email} style={styles.userContainer}>
-                  <TouchableOpacity onPress={() => { navigationToTab.navigate('마이페이지', { email: user.email }) }}>
-                    <Image source={{ uri: user.profile_image }} style={styles.profileImage} />
-                  </TouchableOpacity>
-                  <View style={styles.userInfo}>
-                    <Text style={styles.username}>{user.nickname}</Text>
-                    {/* <Text style={styles.useremail}>{user.email}</Text> */}
+              {
+                followingList.map((user) => (
+                  <View key={user.email} style={styles.userContainer}>
+                    <TouchableOpacity onPress={() => { navigationToTab.navigate('마이페이지', { email: user.email }) }}>
+                      <Image source={{ uri: user.profile_image }} style={styles.profileImage} />
+                    </TouchableOpacity>
+                    <View style={styles.userInfo}>
+                      <Text style={styles.username}>{user.nickname}</Text>
+                      {/* <Text style={styles.useremail}>{user.email}</Text> */}
+                    </View>
+                    {/* <TouchableOpacity style={{ position: 'absolute', right: 20 }}
+                      onPress={() => { undoFollowing(user.email) }}>
+                        <Text style={styles.undofollowing}>삭제</Text>
+                    </TouchableOpacity> */}
                   </View>
-                  <TouchableOpacity onPress={()=>{}}></TouchableOpacity>
-                </View>
-              ))
-            }
+                ))
+              }
             </>
         }
       </ScrollView>
@@ -93,17 +105,12 @@ const styles = StyleSheet.create({
     flexGrow: 1,
     paddingVertical: 20,
     paddingHorizontal: 10,
-    borderBottomWidth: 1,
-    borderBottomColor: '#CCC',
   },
   userContainer: {
     position: 'relative',
     flexDirection: 'row',
     alignItems: 'center',
-    paddingHorizontal: 20,
-    paddingVertical: 10,
-    borderBottomWidth: 1,
-    borderBottomColor: 'white',
+    marginVertical: 8,
   },
   username: {
     fontSize: 14,
@@ -126,23 +133,34 @@ const styles = StyleSheet.create({
 
   },
   profileImage: {
-    width: 40,
-    height: 40,
+    width: 50,
+    height: 50,
     backgroundColor: '#D9D9D9',
-    borderRadius: 20,
+    borderRadius: 25,
+    marginHorizontal: 16,
   },
   inputContainer: {
     marginBottom: 20,
   },
   userInfo: {
-    marginLeft: 10,
+    display: 'flex',
+    justifyContent: 'space-between'
+  },
+  undofollowing: {
+    height: 18,
+    fontSize: 10,
+    lineHeight: 18,
+    borderColor: '#D7D7D7',
+    borderWidth:1,
+    paddingHorizontal:7,
+    borderRadius:9
   },
   alert: {
     fontWeight: '700',
-    marginLeft: 20,
+    marginLeft: 20
   }
 });
 
 
 
-export default Follower;
+export default UserFollowing;

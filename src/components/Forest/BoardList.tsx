@@ -3,7 +3,6 @@ import {
   FlatList,
   StyleSheet,
   SafeAreaView,
-  ActivityIndicator,
   ScrollView,
   ImageBackground,
   Dimensions,
@@ -31,8 +30,8 @@ import { TabProps } from "../../../App";
 import Arrow from '../../assets/img/common/Arrow.svg';
 import AddCategory from '../../assets/img/Forest/AddCategory.svg';
 import UserCategories from "./components/UserCategories";
-import { event } from "react-native-reanimated";
-import { NativeEvent } from "react-native-reanimated/lib/types/lib/reanimated2/commonTypes";
+import { SelectedCategoryContext, SelectedCategoryProvider }from './SelectedCategoryContext';
+
 
 const { width, height } = Dimensions.get("screen");
 
@@ -51,9 +50,8 @@ const BoardListScreen = ({
   const [modalVisible, setModalVisible] = useState<boolean>(false);
   const [userCategories, setUserCategories] = useState([] as any);
   const [topCategories, setTopCategories] = useState([] as any);
-  const [checkedList, setCheckedList] = useState([] as any);
-  const [selectedIds, setSelectedIds] = useState<number[]>([]);
   const {isLogin, setLogin} = useContext(LoginContext);
+  const{selectedCategories, setSelectedCategories, selectedIds, setSelectedIds}=useContext(SelectedCategoryContext);
   const [showbarCategory, setshowbarCategory] = useState(false);
   const navigationToTab = useNavigation<StackNavigationProp<TabProps>>();
   const flatListRef=useRef(null);
@@ -61,10 +59,8 @@ const BoardListScreen = ({
   const [flatHeight,setflatHeight]=useState<number>(0);
   const request = new Request();
 
-  const user_select=route.params?.checkedList;
-  const user_select_id=route.params?.selectedIds;
-
-  const getUserInfo = async () => {
+  const getUserInfo = async () =>
+   {
     const response = await request.get('/mypage/me/', {}, {});
     setNickname(response.data.data.nickname);
   }
@@ -76,15 +72,14 @@ const BoardListScreen = ({
 
   const getUserCategories = async () => {
     const response = await request.get('/forest/user_categories/get/');
-    console.error(response)
     setUserCategories([...response.data.data.results, {id: 0, name: '+'}]);
     setTopCategories([...response.data.data.results]);
   }
 
   const getPosts = async () => {
     let params = new URLSearchParams();
-    for (const category of checkedList){
-      params.append('semi_category_filters', category.id);
+    for (const category of selectedCategories){
+      params.append('semi_category_filters', String(category.id));
     }
     const response = await request.get(`/forest/?${params.toString()}`, {}, null);
     const response_hot = await request.get(`/forest/?${params.toString()}`, { order: 'hot' }, null);
@@ -149,14 +144,7 @@ const BoardListScreen = ({
 
   useFocusEffect(useCallback(() => {
     getPosts();
-  }, [refreshing, checkedList]))
-
-  useFocusEffect(useCallback(()=>{
-    if (user_select){setCheckedList(user_select);}
-    else{setCheckedList([])}
-    if(user_select_id){setSelectedIds(user_select_id);}
-    else{setSelectedIds([])}
-  },[user_select, user_select_id]))
+  }, [refreshing, selectedCategories]))
 
   return (
     <SafeAreaView style={styles.container}>
@@ -175,10 +163,10 @@ const BoardListScreen = ({
                     onPress={() => {
                       if (selectedIds.includes(item.id)) {
                         setSelectedIds(selectedIds.filter(id => id !== item.id));
-                        setCheckedList(checkedList.filter((category: any) => category.id !== item.id));
+                        setSelectedCategories(selectedCategories.filter((category: any) => category.id !== item.id));
                       } else {
-                        setSelectedIds([...selectedIds, item.id]);
-                        setCheckedList([...checkedList, item]);
+                        setSelectedIds(selectedIds=>[...selectedIds, Number(item.id)]);
+                        setSelectedCategories(selectedCategories=>[...selectedCategories, item]);
                       }
                     }}
                   >
@@ -242,12 +230,15 @@ const BoardListScreen = ({
                           return (
                             <TouchableOpacity style={{ borderRadius: 16, borderColor: '#67D393', borderWidth: 1, paddingVertical: 4, paddingHorizontal: 16, marginRight: 8, marginVertical: 4, backgroundColor: selectedIds.includes(item.id) ? '#67D393' : 'white' }}
                               onPress={() => {
-                                if (selectedIds.includes(item.id)) {
+                                if (selectedIds&&selectedIds.includes(item.id)) {
                                   setSelectedIds(selectedIds.filter(id => id !== item.id));
-                                  setCheckedList(checkedList.filter((category: any) => category.id !== item.id));
+                                  setSelectedCategories(selectedCategories.filter((category: any) => category.id !== item.id));
                                 } else {
-                                  setSelectedIds([...selectedIds, item.id]);
-                                  setCheckedList([...checkedList, item]);
+                                  setSelectedIds(selectedIds => {
+                                    const updatedIds = [... selectedIds, item.id];
+                                    return updatedIds;
+                                  });
+                                  setSelectedCategories([...selectedCategories, item]);
                                 }
                               }}
                             >
@@ -294,7 +285,7 @@ const BoardListScreen = ({
                   key={item.id}
                   data={item}
                   onPress={() => {
-                    navigation.navigate("BoardDetail", { board_category: item , user_select:checkedList, user_select_id:selectedIds});
+                    navigation.navigate("BoardDetail", { board_category: item , user_select:selectedCategories, user_select_id:selectedIds});
                   }}
                 />
               )}
@@ -312,9 +303,9 @@ const BoardListScreen = ({
             paddingVertical: 15,
           }}
         >
-          {checkedList.length > 0 &&
+          {selectedCategories.length > 0 &&
             <View style={{flexDirection: 'row', paddingHorizontal: 15, paddingBottom: 5}}>
-              {checkedList.map((category: any) => 
+              {selectedCategories.map((category: any) => 
                 (
                   <Text style={{color: '#67D393', fontWeight: '700', fontSize: 16}}>
                     #{category.name+' '}

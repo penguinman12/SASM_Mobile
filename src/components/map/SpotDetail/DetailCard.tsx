@@ -307,7 +307,7 @@ export default function DetailCard({ detailData, setIndex }: DetailCardProps): J
                 <PlusWhite />
               </TouchableOpacity>
               <Heart like={likePlace} onPress={handlePlaceLike} color={'white'} size={20}/>
-              <ShareButton color='white' message={`[SASM Map] ${detailData.place_name} - ${detailData.category}`} image={detailData.rep_pic} description={detailData.place_review} id={detailData.id} from='place' />
+              <ShareButton color='white' message={`[SASM Map] ${detailData.place_name} - ${detailData.category}`} image={detailData.rep_pic} description={detailData.place_review} id={detailData.id} />
             </ButtonBox>
             <TextBox>
               <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>

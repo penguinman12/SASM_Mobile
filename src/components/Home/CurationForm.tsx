@@ -157,21 +157,19 @@ export default function CurationForm({ navigation, route }: StackScreenProps<Hom
   
       
       formData.append('photo_image_url', rep_pic[0].uri == ''?curationDetail.rep_pic: rep_pic[0].uri)
-      formData.append('rep_pic', {
-        uri: rep_pic[0].uri,
-        name: rep_pic[0].fileName,
-        type: rep_pic[0].uri.endsWith('.jpg') ? 'image/jpeg' : 'image/png',
-      })
+      if(rep_pic[0].uri != '' && (rep_pic[0].uri !== curationDetail.rep_pic)){
+        formData.append('rep_pic', {
+          uri: rep_pic[0].uri,
+          name: rep_pic[0].fileName,
+          type: rep_pic[0].uri.endsWith('.jpg') ? 'image/jpeg' : 'image/png',
+        })
+      }
       for (let i of selectedStory) {
         formData.append('stories', (i.story_id||i.id));
         formData.append('short_curations', '.');
       }
       if (form.title.length == 0 || form.contents.length == 0) {
         Alert.alert('빈 칸을 전부 채워주세요.')
-        return;
-      }
-      if (rep_pic[0].uri == '') {
-        Alert.alert('대표 사진을 설정해주세요.')
         return;
       }
       if (selectedStory.length < 3) {
@@ -308,7 +306,7 @@ export default function CurationForm({ navigation, route }: StackScreenProps<Hom
           subtitle={[(id? '수정한 큐레이션은':'작성한 큐레이션은'), '마이페이지 > 큐레이션 > 내가 쓴 큐레이션', '에서 확인할 수 있어요']}
         />
       </Modal>
-    <FormHeader  title= {id? '큐레이션 수정':'큐레이션 작성'} onLeft={() => navigation.goBack()} onRight={uploadCuration} begin={true} end={true} />
+    <FormHeader  title= {id? '큐레이션 수정':'큐레이션 작성'} onLeft={() => id ? navigation.replace('Detail', { id: id}) : navigation.goBack()} onRight={uploadCuration} begin={true} end={true} />
     <ScrollView>
       <ReppicBox onPress={handleRepPic}>
         <ImageBackground source={( rep_pic[0].uri != '' ? ({uri: rep_pic[0].uri} ): (curationDetail?.rep_pic != ''? (  {uri:curationDetail.rep_pic}):require('../../assets/img/Home/form_example.png')))}

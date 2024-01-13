@@ -25,6 +25,7 @@ export default function UserForest({email}: OtherUserInfo) {
   const [written, setWritten] = useState<MyForestItemCardProps[]>([]);
   const request = new Request();
   const [checkedList, setCheckedList] = useState<string[]>([]);
+  const [isUser, setIsUser] = useState<boolean>(false);
 
   const rerender = () => {
     setRefresh(true);
@@ -76,6 +77,7 @@ export default function UserForest({email}: OtherUserInfo) {
         setPage={type ? setPage : setWrittenPage}
         label='내 포레스트'
         forest
+        isUser={isUser}
       />
       {
         isLogin ?

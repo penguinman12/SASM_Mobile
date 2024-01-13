@@ -42,6 +42,7 @@ const UserPlace = ({email}: OtherUserInfo) => {
   const request = new Request();
   const [type, setType] = useState<boolean>(false);
   const [written, setWritten] = useState<MyPlaceItemCardProps[]>([]);
+  const [isUser, setIsUser] = useState<boolean>(false);
 
   const rerender = () => {
     setRefresh(true);
@@ -77,6 +78,7 @@ const UserPlace = ({email}: OtherUserInfo) => {
               checkedList={checkedList} setCheckedList={setCheckedList}
               setEdit={setEdit} edit={edit}
               label="내 리뷰"
+              isUser={isUser}
             />
             <View style={styles.Place}>
               {(type ? placeList : written).length === 0 ? (

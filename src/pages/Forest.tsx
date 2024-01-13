@@ -12,6 +12,7 @@ import PhotoPreviewScreen from '../common/PhotoPreview';
 import { StackNavigationProp, StackScreenProps } from '@react-navigation/stack';
 import { TabProps } from '../../App';
 import PostUploadScreen from '../components/Forest/PostUpload';
+import { SelectedCategoryProvider } from '../components/Forest/SelectedCategoryContext';
 
 export interface BoardFormat {
   name: string;
@@ -61,6 +62,7 @@ const Forest = ({navigation, route}:StackScreenProps<TabProps, '포레스트'>) 
     }
   },[route.params?.id])
   return (
+    <SelectedCategoryProvider>
     <Stack.Navigator
       screenOptions={() => ({
         headerShown: false,
@@ -75,6 +77,7 @@ const Forest = ({navigation, route}:StackScreenProps<TabProps, '포레스트'>) 
       <Stack.Screen name="PhotoPreview" component={PhotoPreviewScreen} />
       <Stack.Screen name="PostUpload" component={PostUploadScreen} />
     </Stack.Navigator>
+    </SelectedCategoryProvider>
   );
 };
 

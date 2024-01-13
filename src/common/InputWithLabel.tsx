@@ -27,6 +27,7 @@ interface InputProps extends TextInputProps {
   isRequired?: boolean;
   //잘못 입력되거나 잘못된 양식일 경우 보여주는 빨간 텍스트
   alertLabel?: string;
+  descriptionLabel?: string;
   isAlert?: boolean;
   readonly?: boolean;
   children?: ReactNode;
@@ -35,6 +36,7 @@ interface InputProps extends TextInputProps {
 export default function InputWithLabel({
   isAlert,
   alertLabel,
+  descriptionLabel,
   isRequired,
   containerStyle,
   label,
@@ -81,9 +83,9 @@ export default function InputWithLabel({
         {...rest}
       />
       <Text
-        style={{ width: "85%", fontSize: 10, lineHeight: 18, color: "#FF4D00" }}
+        style={{ width: "85%", fontSize: 10, lineHeight: 18, color: descriptionLabel ? '#67D393':"#FF4D00" }}
       >
-        {isAlert && alertLabel}
+        {isAlert && alertLabel}{descriptionLabel && descriptionLabel}
       </Text>
       {children}
     </View>

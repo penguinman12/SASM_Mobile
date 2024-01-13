@@ -40,7 +40,7 @@ const ForestProvider = ({ children }: any) => {
   const [forest, setForest] = useState({ title: "", subtitle: "", content: "", category: {} as any, semi_categories: [] as any, hashtags: "", photos: [] as any, rep_pic: "" });
 
   return (
-    <ForestContext.Provider value={{ category, setCategory, semiCategories, setSemiCategories, forest, setForest }}>
+    <ForestContext.Provider value={{ category, setCategory, semiCategories, setSemiCategories, forest, setForest, }}>
       {children}
     </ForestContext.Provider>
   );

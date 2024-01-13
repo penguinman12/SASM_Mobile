@@ -8,6 +8,9 @@ import { StackScreenProps } from '@react-navigation/stack';
 import { MyPageProps } from '../../../pages/MyPage';
 import SearchBar from '../../../common/SearchBar';
 import Arrow from '../../../assets/img/common/Arrow.svg';
+import { StackNavigationProp } from "@react-navigation/stack";
+import { useNavigation } from "@react-navigation/native";
+import { TabProps } from "../../../../App";
 
 
 const Following = ({ navigation, route }: StackScreenProps<MyPageProps, 'following'>) => {
@@ -38,6 +41,8 @@ const Following = ({ navigation, route }: StackScreenProps<MyPageProps, 'followi
       GetFollowing();
     }, [searchQuery, refresh]))
 
+  const navigationToTab = useNavigation<StackNavigationProp<TabProps>>();
+
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: 'white', paddingTop: 10 }}>
       <TouchableOpacity style={{ left: 10, marginBottom: 18, display: 'flex', flexDirection: 'row', alignItems: 'center', marginTop: Platform.OS == 'ios' ? 5 : 0 }} onPress={() => { navigation.goBack() }}>
@@ -61,7 +66,9 @@ const Following = ({ navigation, route }: StackScreenProps<MyPageProps, 'followi
               {
                 followingList.map((user) => (
                   <View key={user.email} style={styles.userContainer}>
-                    <Image source={{ uri: user.profile_image }} style={styles.profileImage} />
+                    <TouchableOpacity onPress={() => { navigationToTab.navigate('마이페이지', { email: user.email }) }}>
+                      <Image source={{ uri: user.profile_image }} style={styles.profileImage} />
+                    </TouchableOpacity>
                     <View style={styles.userInfo}>
                       <Text style={styles.username}>{user.nickname}</Text>
                       {/* <Text style={styles.useremail}>{user.email}</Text> */}

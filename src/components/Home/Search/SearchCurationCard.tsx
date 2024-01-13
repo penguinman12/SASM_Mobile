@@ -25,7 +25,7 @@ export default function SearchCurationCard({ data }: any) {
         source={{ uri: data.rep_pic, priority: FastImage.priority.normal }}
         style={{
           margin: 5,
-          width: (width - 45) / 3,
+          width: (width - 40) / 3,
           height: 150,
           backgroundColor: "grey",
         }}

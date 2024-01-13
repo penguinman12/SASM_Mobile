@@ -29,28 +29,6 @@ export type AppProps = {
 }
 
 const Stack = createNativeStackNavigator();
-const useInitialURL = () => {
-  const [url, setUrl] = useState<string | null>(null);
-  const [processing, setProcessing] = useState(true);
-
-  useEffect(() => {
-    const getUrlAsync = async () => {
-      // Get the deep link used to open the app
-      const initialUrl = await Linking.getInitialURL();
-      // console.log(initialUrl)
-
-      // The setTimeout is just for testing purpose
-      setTimeout(() => {
-        setUrl(initialUrl);
-        setProcessing(false);
-      }, 1000);
-    };
-
-    getUrlAsync();
-  }, []);
-
-  return {url, processing};
-};
 
 const App = (): JSX.Element => {
   useEffect(() => {
@@ -59,60 +37,33 @@ const App = (): JSX.Element => {
     }, 800);
   });
 
-  // const navigation = useNavigation<StackNavigationProp<TabProps>>();
-
-  // useEffect(() => {
-  //   //IOS && ANDROID : 앱이 딥링크로 처음 실행될때, 앱이 열려있지 않을 때
-  //   Linking.getInitialURL()
-  //   .then((url) => deepLink(url))
-    
-  //   //IOS : 앱이 딥링크로 처음 실행될때, 앱이 열려있지 않을 때 && 앱이 실행 중일 때
-  //   //ANDROID : 앱이 실행 중일 때
-  //   Linking.addEventListener('url', addListenerLink);
-
-  //   return () => remover()
-  // })
-
-  // const deepLink = (url: any) => {
-  //   console.log('deep', url)
-  //   if (url) {
-  //     console.log(url)
-  //     // navigation.navigate('OTHER_PAGE', { share: url })
-  //   }
-  // };
-
-  // const addListenerLink = ({url}: any) => {
-  //   console.log('listener', url)
-  //   if (url) {
-  //     // navigation.navigate('OTHER_PAGE', { share: url })
-  //     console.log(url)
-  //   }
-  // };
-
-  // const remover = () => {
-  //   Linking.removeAllListeners('url');
-  // };
-
-  const {url: initialUrl, processing} = useInitialURL();
-  useEffect(() => {
-    if(initialUrl) Alert.alert(initialUrl!)
-  }, [])
-
   const linking : LinkingOptions<AppProps> = {
     prefixes: ["kakao6f1497a97a65b5fe1ca5cf4769c318fd://"],
     config: {
       screens: {
         Home: {
           screens: {
-            홈: ':from/:id',
-            스토리: ':from/:id',
-            포레스트: ':from/:id'
+            홈: '/:id',
+            스토리: '/:id',
+            맵: '/:id',
+            포레스트: '/:id'
           }
         },
         Login: {}
       },
     },
   };
+
+  // const handleOpenURL = ({ url }: any) => {
+  //   const path = url.split('//')[1];
+  //   Alert.alert(path)
+  //   if (path.startsWith('kakao6f1497a97a65b5fe1ca5cf4769c318fd://')) {
+  //     const uri = decodeURIComponent(path.slice(7));
+  //     // navigation.navigate('작업 처리할 컴포넌트', { uri: uri ? uri : '' });
+  //   }
+  // };
+
+  // Linking.addEventListener('url', handleOpenURL); 
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
@@ -273,7 +224,9 @@ const codePushOptions = {
     title: '업데이트하시겠습니까?', 
     optionalUpdateMessage: '소소한 버그를 수정했어요🐛', 
     optionalInstallButtonLabel: '업데이트', 
-    optionalIgnoreButtonLabel: '아니요.' 
+    optionalIgnoreButtonLabel: '아니요.',
+    mandatoryUpdateMessage: '소소한 버그를 수정했어요🐛',
+    mandatoryContinueButtonLabel: '업데이트'
   },
   installMode: CodePush.InstallMode.ON_NEXT_RESTART
 }

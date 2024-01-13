@@ -420,7 +420,7 @@ const BottomBarSection = ({ post, email, onRefresh, navigation }: BottomBarSecti
         </TouchableOpacity>
         <Text style={{ fontSize: 14, color: '#202020', lineHeight: 20, marginLeft: 3 }}>{post.comment_cnt}</Text>
       </View>
-      <ShareButton color={'black'} message={`[SASM Forest] ${post.title}`} description={post.content} image={post.rep_pic} id={post.id} from='forest' />
+      <ShareButton color={'black'} message={`[SASM Forest] ${post.title}`} description={post.content} image={post.rep_pic} id={post.id} />
       <PopComment data={post} post_id={post.id} email={email} isLogin={!!email} navigation={navigation} repo={true} modalVisible={commentPopupVisible}  setModalVisible={setCommentPopupVisible}/>
     </View>
   )
@@ -540,7 +540,7 @@ const PostDetailScreen = ({
             refreshing={refreshing}
             ListHeaderComponent={
               <>
-                <PostDetailSection post={post} email={user.email} onReport={() => setModalVisible(true)} onDelete={deletePost} onUpdate={()=>navigation.navigate('PostUpload', {post: post})} onLayout={onLayout} />
+                <PostDetailSection post={post} email={user.email} onReport={() => setModalVisible(true)} onDelete={deletePost} onUpdate={()=>navigation.replace('PostUpload', {post: post})} onLayout={onLayout} />
                 <UserInfoSection user={post.writer} posts={writerPosts.filter((item: any) => item.id !== post.id)} isLogin={isLogin} navigation={navigation} onRefresh={reRenderScreen} writer_is_followed={post.writer_is_followed}/>
                 <View style={{ flexDirection: 'row', padding: 20, alignItems: 'center' }}>
                   <View style={{ flexDirection: 'row', flex: 1 }}>

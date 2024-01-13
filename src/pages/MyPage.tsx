@@ -13,6 +13,7 @@ import FindIDPWScreen from '../components/Auth/FindIDPW';
 import { StackNavigationProp, StackScreenProps } from '@react-navigation/stack';
 import Following from '../components/mypage/components/Following_List';
 import Follower from '../components/mypage/components/Follower_List';
+import UserFollowing from '../components/mypage/components/User_Following_List';
 import Options from '../components/mypage/components/option/OptionPage';
 import Withdraw from '../components/mypage/components/option/Withdraw';
 import UserPageTabView from '../components/mypage/UserPageTabView';
@@ -34,6 +35,9 @@ export type MyPageProps = {
     'feedback': any;
     'findidpw': any;
     'following': {
+        email: string;
+    }
+    'user_following': {
         email: string;
     }
     'follower': {
@@ -71,10 +75,10 @@ const MyPageScreen = ({ navigation, route }: StackScreenProps<TabProps, '마이�
             <MyPageStack.Screen name="findidpw" component={FindIDPWScreen} />
             <MyPageStack.Screen name="following" component={Following} />
             <MyPageStack.Screen name="follower" component={Follower} />
+            <MyPageStack.Screen name="user_following" component={UserFollowing} />
             <MyPageStack.Screen name="options" component={Options} />
             <MyPageStack.Screen name="withdraw" component={Withdraw} />
             <MyPageStack.Screen name="userpage" component={UserPageTabView} />
-            {/*타유저 페이지 추가*/}
         </MyPageStack.Navigator>
     )
 }

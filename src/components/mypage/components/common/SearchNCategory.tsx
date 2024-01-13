@@ -34,9 +34,10 @@ interface SearchNCategoryProps {
   setEdit: Dispatch<SetStateAction<boolean>>;
   edit: boolean;
   forest?:boolean;
+  isUser : boolean;
 }
 
-export function SearchNCategory({ setSearch, search, checkedList, setCheckedList, label, setType, type, setPage, setEdit, edit, forest }: SearchNCategoryProps) {
+export function SearchNCategory({ setSearch, search, checkedList, setCheckedList, label, setType, type, setPage, setEdit, edit, forest, isUser }: SearchNCategoryProps) {
   const [mode, setMode] = useState<boolean>(true);
   const [view, setView] = useState<boolean>(false);
   const buttonAnimatedDisplay = useSharedValue(0);
@@ -71,10 +72,13 @@ export function SearchNCategory({ setSearch, search, checkedList, setCheckedList
                   onPress={() => { setEdit(!edit) }}>
                   <Text style={{ fontSize: 12 }}>편집</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={{ backgroundColor: type ? '#FFFFFF' : '#D7D7D7', borderRadius: 20, borderColor: "#D7D7D7", borderWidth: 0.25, justifyContent: "center", alignItems: "center", marginRight: 5, paddingHorizontal: 5, height: 25 }}
+                {/* boolean 타입 변수로 조정 */}
+                {isUser && <TouchableOpacity style={{ backgroundColor: type ? '#FFFFFF' : '#D7D7D7', borderRadius: 20, borderColor: "#D7D7D7", borderWidth: 0.25, justifyContent: "center", alignItems: "center", marginRight: 5, paddingHorizontal: 5, height: 25 }}
                   onPress={() => { setType(!type); if (setPage) setPage(1) }}>
                   <Text style={{ fontSize: 12 }}>{label}</Text>
-                </TouchableOpacity>
+                </TouchableOpacity>}
+                
+
               </>
               :
               <>
@@ -129,9 +133,10 @@ interface SearchNoCategoryProps {
   setPage?: Dispatch<SetStateAction<number>>;
   edit: boolean;
   setEdit: Dispatch<SetStateAction<boolean>>;
+  isUser : boolean;
 }
 
-export function SearchNoCategory({ setSearch, search, type, setType, label, setPage, setEdit, edit }: SearchNoCategoryProps) {
+export function SearchNoCategory({ setSearch, search, type, setType, label, setPage, setEdit, edit, isUser }: SearchNoCategoryProps) {
   const [mode, setMode] = useState<boolean>(false);
   const [view, setView] = useState<boolean>(false);
   const buttonAnimatedDisplay = useSharedValue(0);
@@ -167,10 +172,11 @@ export function SearchNoCategory({ setSearch, search, type, setType, label, setP
                   onPress={() => { setEdit(!edit) }}>
                   <Text style={{ fontSize: 12 }}>편집</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={{ backgroundColor: type ? '#FFFFFF' : '#D7D7D7', borderRadius: 20, borderColor: "#D7D7D7", borderWidth: 0.25, justifyContent: "center", alignItems: "center", marginRight: 5, paddingHorizontal: 5, height: 25 }}
+                {isUser && <TouchableOpacity style={{ backgroundColor: type ? '#FFFFFF' : '#D7D7D7', borderRadius: 20, borderColor: "#D7D7D7", borderWidth: 0.25, justifyContent: "center", alignItems: "center", marginRight: 5, paddingHorizontal: 5, height: 25 }}
                   onPress={() => { setType(!type); if (setPage) setPage(1) }}>
                   <Text style={{ fontSize: 12 }}>{label}</Text>
-                </TouchableOpacity>
+                </TouchableOpacity>}
+                
               </>
            }
         </Animated.View>

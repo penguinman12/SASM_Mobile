@@ -61,7 +61,7 @@ const CategoryForm = ({ tab, setTab, navigation, post }: PostUploadParams) => {
 
   return (
     <View>
-      <FormHeader title='포레스트 작성' onLeft={() => navigation.goBack()} onRight={category.id !== 0 ? () => setTab(1) : null} begin={true} />
+      <FormHeader title='포레스트 작성' onLeft={() => {post.id !== 0 ? navigation.replace('PostDetail', {post_id: post.id}) : navigation.goBack()}} onRight={category.id !== 0 ? () => setTab(1) : null} begin={true} />
       <View style={{alignItems: 'center', justifyContent: 'center', paddingVertical: height*0.2}}>
         <Text style={{fontSize: 16, color: '#202020', marginBottom: 30}}>카테고리를 선택해 주세요</Text>
         <FlatList

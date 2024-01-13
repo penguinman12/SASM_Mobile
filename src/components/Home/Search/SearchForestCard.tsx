@@ -16,6 +16,7 @@ export default function SearchForestCard({ data }: any) {
       <View
         style={{
           width: width - 30,
+          marginHorizontal: 10,
           height: 90,
           justifyContent: "center",
           alignContent: "flex-start",

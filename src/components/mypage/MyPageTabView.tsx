@@ -114,21 +114,13 @@ const MyPageTabView = ({ navigation }: StackScreenProps<MyPageProps, 'mypage'>) 
               </View>
             </View>
             :
-            <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
+            <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', paddingVertical: 20 }}>
               <View style={{ width: 80, height: 80, borderRadius: 60, borderColor: '#4DB1F7', borderWidth: 1, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
                 <Profile />
               </View>
               <View style={{ paddingVertical: 10, marginLeft: 10 }}>
                 <Text style={{ fontWeight: "700", fontSize: 16 }}>SASM</Text>
-                <Text style={{ fontWeight: "400", fontSize: 12, marginTop: 10 }}>로그인해서 다른 사람들의 장소를 탐색해보세요</Text>
-                <View style={{ flexDirection: "row" }}>
-                  <TouchableOpacity>
-                    <Text style={{ fontWeight: "400", fontSize: 10, color: "#848484", marginTop: 10 }}>팔로워 0 |  </Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity>
-                    <Text style={{ fontWeight: "400", fontSize: 10, color: "#848484", marginTop: 10 }}>팔로잉 0</Text>
-                  </TouchableOpacity>
-                </View>
+                <Text style={{ fontWeight: "400", fontSize: 14, marginTop: 10 }}>로그인해서 다른 사람들의 장소를 탐색해보세요</Text>
               </View>
             </View>
         }
@@ -148,10 +140,10 @@ const MyPageTabView = ({ navigation }: StackScreenProps<MyPageProps, 'mypage'>) 
           <Settings color={'black'} />
         </TouchableOpacity>
       </View> */}
-       <TouchableOpacity style={{width: 30, alignItems: 'center', justifyContent: 'center', height: 30, alignSelf: 'flex-end', marginRight: 10, marginTop: 5}} 
+      {isLogin && <TouchableOpacity style={{width: 30, alignItems: 'center', justifyContent: 'center', height: 30, alignSelf: 'flex-end', marginRight: 10, marginTop: 5}} 
           onPress={() => { isLogin ? navigation.navigate('options', { info: info }) : Alert.alert('로그인이 필요합니다') }}>
           <Settings color={'black'} />
-        </TouchableOpacity>
+        </TouchableOpacity>}
       <ProfileSection />
       <TabView
         navigationState={{ index, routes }}

@@ -80,7 +80,7 @@ const PlaceFormHeader = ({ onLeft, onRight, begin, end }: FormHeaderProps) => {
           height={18}
           color={"white"}
           strokeWidth={3}
-          style={{ marginLeft: 5 }}
+          style={{ marginRight: 5 }}
         />
       </TouchableOpacity>
     </View>

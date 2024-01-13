@@ -119,7 +119,7 @@ const UserPageTabView = ({ navigation, route}: StackScreenProps<MyPageProps, 'us
                   <TouchableOpacity onPress={() => { navigation.navigate('follower', { email: info.email }) }}>
                     <Text style={{ fontWeight: "400", fontSize: 12, color: "#848484", marginTop: 10 }}>팔로워 {follower.num}  |  </Text>
                   </TouchableOpacity>
-                  <TouchableOpacity onPress={() => { navigation.navigate('following', { email: info.email }) }}>
+                  <TouchableOpacity onPress={() => { navigation.navigate('user_following', { email: info.email }) }}>
                     <Text style={{ fontWeight: "400", fontSize: 12, color: "#848484", marginTop: 10 }}>팔로잉 {following.num}</Text>
                   </TouchableOpacity>
                 </View>

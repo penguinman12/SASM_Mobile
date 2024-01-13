@@ -48,6 +48,8 @@ const UserCuration = ({email}: OtherUserInfo) => {
   const [writtenPage, setWrittenPage] = useState<number>(1);
   //true일 경우, 좋아요한 큐레이션 false일 경우, 작성한 큐레이션
   const [type, setType] = useState<boolean>(false);
+  // SearchNCategory 로 넘겨줘서 내 글 보기 버튼 유무
+  const [isUser, setIsUser] = useState<boolean>(false);
 
   const rerender = () => {
     setRefresh(true);
@@ -78,7 +80,7 @@ const UserCuration = ({email}: OtherUserInfo) => {
       {
         isLogin ?
           <>
-            <SearchNoCategory setEdit={setEdit} edit={edit} setSearch={setSearch} search={search} setType={setType} type={type} label='내 큐레이션' />
+            <SearchNoCategory setEdit={setEdit} edit={edit} setSearch={setSearch} search={search} setType={setType} type={type} label='내 큐레이션' isUser={isUser} />
             <View style={styles.Curation}>
               {(type ? curationList : written).length === 0 ? (
                 <View style={{ alignItems: 'center', marginVertical: 20, alignSelf: 'center' }}>

@@ -100,6 +100,7 @@ export default function ChangeForm({ navigation, route }: StackScreenProps<MyPag
       setAlert(true);
       setTimeout(()=>{setAlert(false)}, 3000);
     }
+    Alert.alert(response_check.data.data)
   }
 
   const genderOption = [
@@ -174,6 +175,7 @@ export default function ChangeForm({ navigation, route }: StackScreenProps<MyPag
               label='닉네임'
               alertLabel='이미 사용중인 닉네임입니다'
               isAlert={alert}
+              descriptionLabel={check ? '사용 가능한 닉네임입니다' : ''}
               placeholder='닉네임을 입력해주세요'
               onChangeText={(e) => { setCheck(false); setForm({ ...form, nickname: e }) }}
               onBlur={() => { }}>

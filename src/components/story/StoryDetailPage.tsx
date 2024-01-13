@@ -149,7 +149,7 @@ const BottomBarSection = ({ post, email, onRefresh, navigation }: BottomBarSecti
       </View>
       <PopComment
             data={post} post_id={post.id} email={email} isLogin={!!email} navigation={navigation} repo={false} modalVisible={commentPopupVisible}  setModalVisible={setCommentPopupVisible}/>
-      <ShareButton color={'black'} message={`[SASM Story] ${post.title}`} description={post.html_content} image={post.rep_pic} id={post.id} from='story' />
+      <ShareButton color={'black'} message={`[SASM Story] ${post.title}`} description={post.html_content} image={post.rep_pic} id={post.id} />
     </View>
   )
 }
@@ -272,7 +272,7 @@ const StoryDetailPage = ({ navigation, route }: StoryProps) => {
                 keyExtractor={(item, index) => item.id.toString()}
                 ListHeaderComponent={
                 <>
-                    <StoryDetailBox data={data} navigation={navigation} isLogin={isLogin} email={email} onLayout={onLayout} onRefresh={reRenderScreen} onReport={() => setModalVisible(true)} onDelete={deleteStory} onUpdate={()=>navigation.navigate('WriteStory', { story: data })}/>
+                    <StoryDetailBox data={data} navigation={navigation} isLogin={isLogin} email={email} onLayout={onLayout} onRefresh={reRenderScreen} onReport={() => setModalVisible(true)} onDelete={deleteStory} onUpdate={()=>navigation.replace('WriteStory', { story: data })}/>
                     <View style={{borderBottomColor: '#D9D9D9', width: width, borderBottomWidth: 1, marginTop: 40}} />
                     <View style={{ flexDirection: 'row', padding: 20, alignItems: 'center' }}>
                       <View style={{flexDirection: 'row', flex: 1}}>
